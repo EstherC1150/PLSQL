@@ -477,6 +477,7 @@ BEGIN
     RAISE e_no_emp;
 
     END IF;
+    DBMS_OUTPUT.PUT_LINE('삭제가 완료 되었습니다.');
 EXCEPTION
     WHEN e_no_emp THEN
         DBMS_OUTPUT.PUT_LINE('해당 사원이 없습니다');
@@ -496,23 +497,22 @@ Rollback;
     실행결과) TAYLOR -> T*****  <- 이름 크기만큼 별표(*) 출력
 */
 CREATE OR REPLACE PROCEDURE yedam_emp
-(p_phone_no IN OUT VARCHAR2)
+(emp_id IN NUMBER)
 IS
-    
+    emp_no NUMBER;
+    v_name VARCHAR2(30);
+    v_result VARCHAR2(30);
 BEGIN
-    p_phone_no := SUBSTR(p_phone_no, 1, 3)
-            || '-' || SUBSTR(p_phone_no, 4, 4)
-            || '-' || SUBSTR(p_phone_no, 8);
-END;
-/
-
-DECLARE
-    SELECT last_name FROM test_employee
+    emp_no := emp_id;
+    SELECT last_name
+    INTO v_name
+    FROM test_employee
     WHERE employee_id = emp_no;
-BEGIN
-    DBMS_OUTPUT.PUT_LINE('before ' || v_no);
-    format_phone(v_no);
-    DBMS_OUTPUT.PUT_LINE('after ' || v_no);
+    DBMS_OUTPUT.PUT_LINE(v_name);
+    
+    v_result := RPAD(SUBSTR(v_name, 1, 1), length(v_name), '*');
+        DBMS_OUTPUT.PUT_LINE(v_result);
 END;
 /
+EXECUTE yedam_emp(102);
 
