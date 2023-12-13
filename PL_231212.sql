@@ -20,7 +20,7 @@ SET SERVEROUTPUT ON
 */
 -- 기본 LOOP
 DECLARE
-    -- 단 : 숫자타입, 치환변수ㅗㄹ 입력
+    -- 단 : 숫자타입, 치환변수 입력
     v_dan NUMBER(1,0) := &단;
     v_num NUMBER := 1;
 BEGIN
@@ -78,7 +78,7 @@ DECLARE
     v_msg VARCHAR2(1000);
 BEGIN
     WHILE v_num < 10 LOOP
-        v_dan := 2;
+        v_dan := 2; -- 안쪽 루프에 사용되는 변수가 적절한 시기에 초기화 되어야 한다
         WHILE v_dan < 10 LOOP
             v_msg := v_dan || ' X ' || v_num || ' = ' || (v_dan * v_num) || ' ';
             DBMS_OUTPUT.PUT(RPAD(v_msg, 13, ' '));
@@ -104,6 +104,7 @@ BEGIN
 END;
 /
 
+-- FOR LOOP + IF문
 BEGIN
     FOR v_dan IN 1..9 LOOP -- 특정 단을 2~9까지 반복하는 LOOP문
         IF MOD(v_dan,2) <> 0 THEN
@@ -116,11 +117,12 @@ BEGIN
 END;
 /
 
+-- FOR LOOP + IF문
 -- CONTINUE 이용해서...
 BEGIN
     FOR v_dan IN 1..9 LOOP
         IF MOD(v_dan, 2) = 0 THEN
-            CONTINUE;
+            CONTINUE;   -- 왜 쓰냐면...들여쓰기 때문에...들여쓰기가 한 단계 더 안 들어가도 되니까 가독성을 위해서
         END IF;
             FOR v_num IN 1..9 LOOP
                 DBMS_OUTPUT.PUT_LINE(v_dan || ' X ' || v_num || ' = ' || (v_dan * v_num));
@@ -131,6 +133,7 @@ END;
 /
 
 -- RECORD : 변수쪽, 그래서 DECLARE쪽에 정의 해 주어야 함
+-- 레코드는 전역이 아니고 로컬이다, 그 블럭 안에서만 사용 가능
 DECLARE
     -- 이름에 type을 적어주면 좋다
     -- 블럭이 바뀌면 다시...
@@ -158,6 +161,7 @@ BEGIN
     FROM employees
     WHERE employee_id = &사원번호;
     
+    -- .필드로 접근하기
     DBMS_OUTPUT.PUT_LINE('사원번호 ' || emp_info_rec.employee_id);
     DBMS_OUTPUT.PUT_LINE('이름 ' || emp_info_rec.last_name);
     DBMS_OUTPUT.PUT_LINE('직무 ' || emp_info_rec.job_id);
@@ -323,6 +327,7 @@ END;
 
 
 -- CURSOR
+-- 한줄만 반환, 따라서 LOOP를 필수적으로 사용
 DECLARE
     -- cursor 안에서는 순수한 select문 사용
     CURSOR emp_dept_cursor IS
@@ -383,6 +388,7 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('현재 커서의 데이터는 존재하지 않습니다.');
     END IF;
     
+    -- 커서는 문법적인 문제가 있지 않는 이상 안에 내용이 없어도 오류가 없음
     CLOSE emp_info_cursor;
 END;
 /

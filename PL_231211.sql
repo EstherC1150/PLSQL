@@ -396,6 +396,7 @@ BEGIN
     v_n NUMBER(2,0) := 99;
  BEGIN
  -- 내부에 선언되는 변수는 사라짐, 구별된 형태로 쓰는게 좋다
+ -- 임시변수는 readOnly
     FOR v_n  IN REVERSE 1..10 LOOP
     --FOR v_n IN 10..1 LOOP >> 이렇게 하면 FOR문이 안 열림 따라서 REVERSE 사용
         DBMS_OUTPUT.PUT_LINE(v_n);
